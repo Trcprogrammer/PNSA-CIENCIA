@@ -1,56 +1,92 @@
 
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar bg-light ">
   <div class="container">
     <a class="navbar-brand" href="#">
-      <div>
+      <div class="text-bold d-flex">
         
-      <img class="w-25 h-25" src="https://pnsa.milaulas.com/pluginfile.php/1/core_admin/logo/0x200/1728180038/Logo%20PNSA%20Redesign%202.png" alt="Bootstrap" width="30" height="24">
-            PNSA
+      <img class="w-25 h-25 " src="logo.png" alt="Bootstrap" width="30" height="24">
+             <h1 class="fw-bold text-primary mt-5 mx-1">S<span class="text-success">o</span>iltrack</h1>
       </div>
-    </a> 
+    </a>
   </div>
 </nav>
+
 <div class="container mt-5 d-flex justify-content-center">
     <div class="row w-100 justify-content-center">
-      <h1 class="text-center mb-4">¿Qué puedo plantar?</h1>
+      <div>
+        
+     <h1 class="text-center mb-4 ml-0 fw-bold text-primary ">¿Qué puedo plant<span class="text-success">a</span>r? </h1> 
+      </div>
+      
   
-      <div class="col-md-6">
-        <div class="card p-3">
+      <div class="col-md-12 col-lg-12">
+        <div class="card p-4 bg-light">
+          <div class="w-100 h-100 text-center">
+            <img  class="my-2" style=" width:190px;height: 160px;" src="cientifico.png" alt="">
+
+          </div>
           <div class="row mb-3">
             <div class="col-12 mb-3">
-              <label for="temperatura" class="form-label">Temperatura (°C):</label>
-              <input type="text" id="temperatura" [(ngModel)]="temperatura" class="form-control" placeholder="Ej. 25">
+              <label for="temperatura" class="form-label fw-bold">Temperatura (°C):</label>
+              <div class="input-group">
+                <div class="input-group-text" >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer" viewBox="0 0 16 16">
+                    <path d="M8 14a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    <path d="M8 0a2.5 2.5 0 0 0-2.5 2.5v7.55a3.5 3.5 0 1 0 5 0V2.5A2.5 2.5 0 0 0 8 0M6.5 2.5a1.5 1.5 0 1 1 3 0v7.987l.167.15a2.5 2.5 0 1 1-3.333 0l.166-.15z"/>
+                  </svg>
+                </div>
+              <input  type="text" id="temperatura" [(ngModel)]="temperatura" class="form-control form-control-lg" placeholder="Ej. 25">
+                
+              </div>
             </div>
             <div class="col-12 mb-3">
-              <label for="humeda" class="form-label">Humedad (%):</label>
-              <input type="text" id="humeda" [(ngModel)]="humeda" class="form-control" placeholder="Ej. 70">
+              <label for="humeda" class="form-label fw-bold">Humedad (%):</label>
+              <div class="input-group">
+                <div class="input-group-text" >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-droplet-half" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
+                    <path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
+                  </svg>
+                </div>
+                <input type="text" id="humeda" [(ngModel)]="humeda" class="form-control form-control-lg" placeholder="Ej. 70">
+
+              </div>
             </div>
             <div class="col-12 mb-3">
-              <label for="ph" class="form-label">pH:</label>
-              <input type="text" id="ph" [(ngModel)]="ph" class="form-control" placeholder="Ej. 6.5">
+              <label for="ph" class="form-label fw-bold">pH:</label>
+              <div class="input-group">
+                <div class="input-group-text" >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-droplet-fill" viewBox="0 0 16 16">
+                    <path d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6M6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13"/>
+                  </svg>
+
+                </div>
+                <input type="text" id="ph" [(ngModel)]="ph" class="form-control form-control-lg" placeholder="Ej. 6.5">
+
+              </div>
             </div>
           </div>
   
           <div class="text-center">
             
-            <button (click)="TestGemini()" class="btn btn-success w-100 mb-4">Buscar</button>
+            <button (click)="TestGemini()" class="btn btn-primary btn-lg w-100 mb-4">Buscar</button>
 
           </div>
   
           <div class="row">
-            <div class="col-12 mb-3">
+            <div class="col-md-12 col-lg-12 mb-3">
               <div *ngIf="resultFrutas()" class="alert alert-info text-center">
                 <h2 class="h5">Frutas:</h2>
                 <p>{{ resultFrutas() }}</p>
               </div>
             </div>
-            <div class="col-12 mb-3">
+            <div class="col-md-12 col-lg-12 mb-3">
               <div *ngIf="resultVerduras()" class="alert alert-info text-center">
                 <h2 class="h5">Vegetacion:</h2>
                 <p>{{ resultVerduras() }}</p>
               </div>
             </div>
-            <div class="col-12 mb-3">
+            <div class="col-md-12 col-lg-12 mb-3">
               <div *ngIf="resultPlantas()" class="alert alert-info text-center">
                 <h2 class="h5">Recomendaciones:</h2>
                 <p>{{ resultPlantas() }}</p>
@@ -62,3 +98,14 @@
     </div>
   </div>
   
+<!-- Footer -->
+<!-- Footer -->
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+  
+  <div class="text-center p-2" style="background-color: rgba(247, 237, 237, 0.2);">
+    <p class="mb-0 text-dark">© 2024 Soiltrack-PNSA | Programador: Tracy (racvycode)</p>
+    <!-- <a class="text-dark" href="#">Política de Privacidad</a> | -->
+    <!-- <a class="text-dark" href="#">Términos de Uso</a> | -->
+    <a class="text-dark" href="https://racvycode.com/">Contacto</a>
+  </div>
+</footer>

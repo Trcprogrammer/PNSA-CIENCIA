@@ -44,9 +44,9 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {}
 
   async TestGemini() {
-    const promptFrutas = `¿Qué Frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?, solo mencionalas de RD, sin explicacion`;
-    const promptVerduras = `¿Qué Vegetacion puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,solo mencionalas de RD sin explicacion`;
-    const promptPlantas = `¿Qué dame consejos  de en debo tener cuidado al plantar con temperatura de  ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,enfocado a RD, un resumen corto y para un joven, solo di eso `;
+    const promptFrutas = `¿Qué Frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?, solo mencionalas de RD solo enfocado en rd mas comunes, sin explicacion, sin asteriscos para separar, puedes numerarlos `;
+    const promptVerduras = `¿Qué Vegetacion puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,solo mencionalas de RD solo enfocado en rd sin explicacion, sin asteriscos para separar, puedes numerarlos `;
+    const promptPlantas = `¿Qué dame consejos  de en debo tener cuidado al plantar con temperatura de  ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,enfocado a RD, un resumen corto sin ateriscos, y que sea un solo consejos`;
 
     try {
       const resultFrutas = await model.generateContent(promptFrutas);
