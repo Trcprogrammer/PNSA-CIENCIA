@@ -4,6 +4,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { environment } from '../environments/environment.development';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // <-- Importa CommonModule
+import Swal from 'sweetalert2';
+
 
 const googleGenAI = new GoogleGenerativeAI(environment.API_KEY);
 
@@ -31,78 +33,112 @@ export class AppComponent implements OnInit {
   resultFrutas = signal("");
   resultVerduras = signal("");
   resultPlantas = signal("");
-  
-  
+
+
+
+
   frutas: string[] = [];
   verduras: string[] = [];
-  plantas: string[] = []; // Nueva variable para plantas
-  
-  temperatura: string = ''; 
+  plantas: string[] = [];
+
+  temperatura: string = '';
   humeda: string = '';
   ph: string = '';
 
-  ngOnInit(): void {}
 
+  ngOnInit(): void {
+    // this.showLoadingAlert();
+  }
+
+  showLoadingAlert() {
+    Swal.fire({
+      title: 'Buscando...',
+      text: 'Por favor espera',
+      icon: 'success',
+      allowOutsideClick: false,
+      timer: 3000,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    }).then(() => {
+
+      this.scrollToBottom();
+    });
+  }
+
+  scrollToBottom() {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth' 
+    });
+  }
+
+
+  alert() {
+    this.showLoadingAlert()
+
+  }
+  reset() {
+    Swal.fire({
+      title: 'Actualizando',
+      text: 'Por favor espera',
+      icon: 'success',
+      allowOutsideClick: false,
+      timer: 2000,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    }).then(() => {
+      window.location.reload();
+   
+      // this.scrollToBottom(); 
+    });
+  }
+
+  error() {
+    Swal.fire({
+      title: 'Campos vacíos',
+      text: 'Por favor, llena todos los campos antes de continuar.',
+      icon: 'warning',
+      confirmButtonColor: '#d33', // Color rojo para el botón de alerta
+    });
+  }
   async TestGemini() {
-    const promptFrutas = `¿Qué Frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?, solo mencionalas de RD solo enfocado en rd mas comunes, sin explicacion, sin asteriscos para separar, puedes numerarlos `;
-    const promptVerduras = `¿Qué Vegetacion puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,solo mencionalas de RD solo enfocado en rd sin explicacion, sin asteriscos para separar, puedes numerarlos `;
-    const promptPlantas = `¿Qué dame consejos  de en debo tener cuidado al plantar con temperatura de  ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}?,enfocado a RD, un resumen corto sin ateriscos, y que sea un solo consejos`;
+
+    if (!this.temperatura || !this.humeda || !this.ph) {
+
+      this.error()
+      return;
+    }
+
+
+    this.showLoadingAlert();
+    const promptFrutas = `¿Cuáles frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera con numeros nada mas  las más comunes en República Dominicana sin agregar signos adicionales., sin ateriscos `;
+    const promptVerduras = `¿Qué vegetación enfocado en vegetalesque  puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera  con numeros nada mas las más comunes en República Dominicana sin agregar signos adicionales. sin aterisco`;
+    const promptPlantas = `¿Qué consejo breve me puedes dar para plantar con temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Enfocado a República Dominicana y solo un consejo corto. sin aterisco, y organizalo y motivador muy corto de como debo plantar`;
 
     try {
       const resultFrutas = await model.generateContent(promptFrutas);
       const responseFrutas = resultFrutas.response;
-      const textoRespuestaFrutas = responseFrutas.text();
-      console.log('Respuesta de frutas:', textoRespuestaFrutas);
-      this.resultFrutas.set(textoRespuestaFrutas);
-
-      this.frutas = [];
-      const frutasYVerduras = textoRespuestaFrutas.split('\n')
-      frutasYVerduras.forEach((item) => {
-        const itemLower = item.toLowerCase().trim();
-        if (itemLower.startsWith('fruta:')) {
-          this.frutas.push(itemLower.replace('fruta:', '').trim());
-        }
-      });
+      this.resultFrutas.set(responseFrutas.text());
 
       const resultVerduras = await model.generateContent(promptVerduras);
       const responseVerduras = resultVerduras.response;
-      const textoRespuestaVerduras = responseVerduras.text();
-      console.log('Respuesta de verduras:', textoRespuestaVerduras);
-      this.resultVerduras.set(textoRespuestaVerduras);
-
-      this.verduras = [];
-      const verdurasYPlantas = textoRespuestaVerduras.split('\n');
-      verdurasYPlantas.forEach((item) => {
-        const itemLower = item.toLowerCase().trim();
-        if (itemLower.startsWith('verdura:')) {
-          this.verduras.push(itemLower.replace('verdura:', '').trim());
-        }
-      });
+      this.resultVerduras.set(responseVerduras.text());
 
       const resultPlantas = await model.generateContent(promptPlantas);
       const responsePlantas = resultPlantas.response;
-      const textoRespuestaPlantas = responsePlantas.text();
-      console.log('Respuesta de plantas:', textoRespuestaPlantas);
-      this.resultPlantas.set(textoRespuestaPlantas);
-
-      this.plantas = [];
-      const plantasList = textoRespuestaPlantas.split('\n');
-      plantasList.forEach((item) => {
-        const itemLower = item.toLowerCase().trim();
-        if (itemLower.startsWith('planta:')) {
-          this.plantas.push(itemLower.replace('planta:', '').trim());
-        }
-      });
-
-      // console.log('Frutas:', this.frutas);  // Para verificar que estamos obteniendo las frutas
-      // console.log('Verduras:', this.verduras);  // Para verificar que estamos obteniendo las verduras
-      // console.log('Plantas:', this.plantas);  // Para verificar que estamos obteniendo las plantas
+      this.resultPlantas.set(responsePlantas.text());
 
     } catch (error) {
       console.error('Error al generar contenido:', error);
-      this.resultFrutas.set("Ocurrió un error al obtener las respuestas.");
-      this.resultVerduras.set("Ocurrió un error al obtener las respuestas.");
-      this.resultPlantas.set("Ocurrió un error al obtener las respuestas.");
+      Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error al obtener las respuestas. Por favor, intenta de nuevo.',
+        icon: 'error',
+      });
     }
   }
+
+
 }
