@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common'; // <-- Importa CommonModule
 import Swal from 'sweetalert2';
 
 
+
 const googleGenAI = new GoogleGenerativeAI(environment.API_KEY);
 
 const generationconfig = {
@@ -103,6 +104,8 @@ export class AppComponent implements OnInit {
       confirmButtonColor: '#d33', // Color rojo para el botón de alerta
     });
   }
+
+  
   async TestGemini() {
 
     if (!this.temperatura || !this.humeda || !this.ph) {
@@ -115,7 +118,7 @@ export class AppComponent implements OnInit {
     this.showLoadingAlert();
     const promptFrutas = `¿Cuáles frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera con numeros nada mas  las más comunes en República Dominicana sin agregar signos adicionales., sin ateriscos `;
     const promptVerduras = `¿Qué vegetación enfocado en vegetalesque  puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera  con numeros nada mas las más comunes en República Dominicana sin agregar signos adicionales. sin aterisco`;
-    const promptPlantas = `¿Qué consejo breve me puedes dar para plantar con temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Enfocado a República Dominicana y solo un consejo corto. sin aterisco, y organizalo y motivador muy corto de como debo plantar`;
+    const promptPlantas = `¿Qué recomendacion breve me puedes dar para plantar con temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Enfocado a República Dominicana . sin aterisco, y organizalo y que solo sea una recomendacion sin ateriscos, que sea corta`;
 
     try {
       const resultFrutas = await model.generateContent(promptFrutas);
