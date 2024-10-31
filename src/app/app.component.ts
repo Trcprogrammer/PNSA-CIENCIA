@@ -101,7 +101,7 @@ export class AppComponent implements OnInit {
       title: 'Campos vacíos',
       text: 'Por favor, llena todos los campos antes de continuar.',
       icon: 'warning',
-      confirmButtonColor: '#d33', // Color rojo para el botón de alerta
+      confirmButtonColor: '#d33', 
     });
   }
 
