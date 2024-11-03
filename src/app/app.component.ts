@@ -3,10 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { environment } from '../environments/environment.development';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // <-- Importa CommonModule
+import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-
-
 
 const googleGenAI = new GoogleGenerativeAI(environment.API_KEY);
 
@@ -34,10 +32,7 @@ export class AppComponent implements OnInit {
   resultFrutas = signal("");
   resultVerduras = signal("");
   resultPlantas = signal("");
-
-
-
-
+  isLoading = true;
   frutas: string[] = [];
   verduras: string[] = [];
   plantas: string[] = [];
@@ -45,11 +40,13 @@ export class AppComponent implements OnInit {
   temperatura: string = '';
   humeda: string = '';
   ph: string = '';
-
-
+  showResults = false;
   ngOnInit(): void {
-    // this.showLoadingAlert();
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 4000); 
   }
+  
 
   showLoadingAlert() {
     Swal.fire({
@@ -57,42 +54,9 @@ export class AppComponent implements OnInit {
       text: 'Por favor espera',
       icon: 'success',
       allowOutsideClick: false,
-      timer: 3000,
       didOpen: () => {
         Swal.showLoading();
       },
-    }).then(() => {
-
-      this.scrollToBottom();
-    });
-  }
-
-  scrollToBottom() {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth' 
-    });
-  }
-
-
-  alert() {
-    this.showLoadingAlert()
-
-  }
-  reset() {
-    Swal.fire({
-      title: 'Actualizando',
-      text: 'Por favor espera',
-      icon: 'success',
-      allowOutsideClick: false,
-      timer: 2000,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    }).then(() => {
-      window.location.reload();
-   
-      // this.scrollToBottom(); 
     });
   }
 
@@ -101,37 +65,31 @@ export class AppComponent implements OnInit {
       title: 'Campos vacíos',
       text: 'Por favor, llena todos los campos antes de continuar.',
       icon: 'warning',
-      confirmButtonColor: '#d33', 
+      confirmButtonColor: '#d33',
     });
   }
 
-  
   async TestGemini() {
-
     if (!this.temperatura || !this.humeda || !this.ph) {
-
-      this.error()
+      this.error();
       return;
     }
-
-
     this.showLoadingAlert();
-    const promptFrutas = `¿Cuáles frutas puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera con numeros nada mas  las más comunes en República Dominicana sin agregar signos adicionales., sin ateriscos `;
-    const promptVerduras = `¿Qué vegetación enfocado en vegetalesque  puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Solo menciona y enumera  con numeros nada mas las más comunes en República Dominicana sin agregar signos adicionales. sin aterisco`;
-    const promptPlantas = `¿Qué recomendacion breve me puedes dar para plantar con temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}? Enfocado a República Dominicana . sin aterisco, y organizalo y que solo sea una recomendacion sin ateriscos, que sea corta`;
-
+    const promptFrutas = `Lista las frutas que puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}. Para cada fruta, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarla. Organiza cada fruta en una nueva línea,  ni otros signos. todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
+    const promptVerduras = `Lista los vegetales que puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}. Para cada vegetal, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarlo. Organiza cada vegetal en una nueva línea,  ni otros signos. todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
+    const promptPlantas = `Dame una recomendación breve y general sobre el cultivo de plantas con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}, . Para cada vegetal, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarlo. Organiza cada vegetal en una nueva línea,  ni otros signos.  todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
+    
     try {
       const resultFrutas = await model.generateContent(promptFrutas);
-      const responseFrutas = resultFrutas.response;
-      this.resultFrutas.set(responseFrutas.text());
+      this.resultFrutas.set(resultFrutas.response.text());
 
       const resultVerduras = await model.generateContent(promptVerduras);
-      const responseVerduras = resultVerduras.response;
-      this.resultVerduras.set(responseVerduras.text());
+      this.resultVerduras.set(resultVerduras.response.text());
 
       const resultPlantas = await model.generateContent(promptPlantas);
-      const responsePlantas = resultPlantas.response;
-      this.resultPlantas.set(responsePlantas.text());
+      this.resultPlantas.set(resultPlantas.response.text());
+      this.showResults = true;
+      Swal.close();
 
     } catch (error) {
       console.error('Error al generar contenido:', error);
@@ -142,6 +100,4 @@ export class AppComponent implements OnInit {
       });
     }
   }
-
-
 }
