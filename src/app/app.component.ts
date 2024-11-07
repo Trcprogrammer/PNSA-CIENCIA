@@ -31,7 +31,7 @@ const model = googleGenAI.getGenerativeModel({
 export class AppComponent implements OnInit {
   resultFrutas = signal("");
   resultVerduras = signal("");
-  resultPlantas = signal("");
+  consejo = signal("");
   isLoading = true;
   frutas: string[] = [];
   verduras: string[] = [];
@@ -60,6 +60,28 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+  contentInfo() {
+    Swal.fire({
+      title: "<strong>SoilTrack</strong>",
+      html: `
+        <div style="text-align: left; font-size: 1.1em;">
+          <p>SoilTrack es tu herramienta para descubrir qué plantar según las características del suelo.</p>
+          <p>Ingresa los datos de <strong>temperatura</strong>, <strong>humedad</strong> y <strong>pH</strong> del suelo y luego presiona <strong>Buscar</strong> para obtener recomendaciones de cultivo.</p>
+        </div>
+      `,
+      showCloseButton: true,
+      backdrop: true,
+      customClass: {
+        popup: 'fullscreen-popup',
+        confirmButton: 'wide-button' 
+      },
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#28a745', 
+    });
+  }
+  
+
   error() {
     Swal.fire({
       title: 'Campos vacíos',
@@ -77,7 +99,7 @@ export class AppComponent implements OnInit {
     this.showLoadingAlert();
     const promptFrutas = `Lista las frutas que puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}. Para cada fruta, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarla. Organiza cada fruta en una nueva línea,  ni otros signos. todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
     const promptVerduras = `Lista los vegetales que puedo plantar con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}. Para cada vegetal, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarlo. Organiza cada vegetal en una nueva línea,  ni otros signos. todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
-    const promptPlantas = `Dame una recomendación breve y general sobre el cultivo de plantas con una temperatura de ${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}, . Para cada vegetal, escribe su nombre seguido de dos puntos, espacio y luego una recomendación breve para plantarlo. Organiza cada vegetal en una nueva línea,  ni otros signos.  todo enfocalo en lo mas comun en republica dominicana, todos enumerados`;
+    const promptconsejo= `Dame un consejo estudiante motivador para plantar en tierra con${this.temperatura}°C, humedad de ${this.humeda}%, y pH de ${this.ph}, que sea claro corto y motivador y  sin tantos signos que sea humanizado`;
     
     try {
       const resultFrutas = await model.generateContent(promptFrutas);
@@ -86,11 +108,13 @@ export class AppComponent implements OnInit {
       const resultVerduras = await model.generateContent(promptVerduras);
       this.resultVerduras.set(resultVerduras.response.text());
 
-      const resultPlantas = await model.generateContent(promptPlantas);
-      this.resultPlantas.set(resultPlantas.response.text());
+      const consejo = await model.generateContent(promptconsejo);
+      this.consejo.set(consejo.response.text());
       this.showResults = true;
       Swal.close();
-
+       this.temperatura=''
+       this.humeda=''
+       this.ph=''
     } catch (error) {
       console.error('Error al generar contenido:', error);
       Swal.fire({
